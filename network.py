@@ -20,7 +20,7 @@ class Network:
 
     
     def add_node(self):
-        """Node to split: Node Class object"""
+        """Node to split: Node object"""
 
         id = calc.generate_hex_id()
         position = calc.generate_random_position(self.dimensions)
@@ -35,6 +35,7 @@ class Network:
         new_position, new_node_area = calc.split_node(node_to_split) 
         new_node = Node(id=id, position=new_position if new_position else position)
         new_node.area = new_node_area
+        new_node.add_content()
 
         self.nodes.append(new_node)
         self.node_locations[id] = position

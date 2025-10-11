@@ -17,8 +17,8 @@ def draw_network(nodes, dimensions):
         # Draw box around node
         x1, y1 = node.area[0]
         x2, y2 = node.area[1]
-        x = [x1, x2, x2, x1, x1]
-        y = [y1, y1, y2, y2, y1]
+        x = [x1, x1, x2, x2, x1]
+        y = [y1, y2, y2, y1, y1]
 
         plt.plot(x, y)
 

@@ -18,7 +18,7 @@ def delete_a_node():
 
 def list_nodes():
     for node in network.nodes:
-        print(node.__repr__)
+        print(f"Node 0x{node.id} | position: {node.position}")
 
 def show_adjacent_nodes():
     print(network.adjacency_list)

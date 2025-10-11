@@ -22,42 +22,42 @@ def find_nearest_node(node, nodes):
 
 def split_node(current_node):
     """Returns Tuple(new_position, new_node_area)
-    Updates current_node.area"""
+    Updates current_node.area and current_node.position"""
     x1, y1 = current_node.area[0]
     x2, y2 = current_node.area[1]
     width, height = x2 - x1, y2 - y1
+    x_mid = x1 + width // 2
+    y_mid = y1 + height // 2
 
-    if width >= height:
-        # Cut area in half vertically
-        mid_x = x1 + width // 2
-        new_node_area = [[mid_x, current_node.area[0][1]], [current_node.area[1][0], current_node.area[1][1]]]
-        current_node.area = [[x1, y1], [mid_x, y2]]   
-
-        # Current to left, New to right
-        current_pos_x = x1 + (mid_x // 2)
+    if width >= height:  # Cut area in half vertically
+        # Current to left
+        current_node.area = [[x1, y1], [x_mid, y2]]   
+        current_pos_x = x1 + (width // 4)
         current_pos_y = y1 + (height // 2) 
-        current_node.position = (current_pos_x, current_pos_y)
 
-        x1, y1 = new_node_area[0]
-        x2, y2 = new_node_area[1]
-    else:
-        # Cut area in half horizontally
-        mid_y = current_node.area[0][1] + height // 2
-        new_node_area = [[current_node.area[0][0], mid_y], [current_node.area[1][0], current_node.area[1][1]]]
-        current_node.area = [[x1, y1], [x2, mid_y]] 
+        # New to right
+        new_area_start = (x_mid, y1)
+        new_area_end = (x2, y2)
+        new_node_area = (new_area_start, new_area_end)
 
-        # Current to top, New to bottom 
+    else:  # Cut area in half horizontally
+        # Current to top
+        current_node.area = [[x1, y_mid], [x2, y2]] 
         current_pos_x = x1 + width // 2
-        current_pos_y = y1 + (height // 4) 
-        current_node.position = (current_pos_x, current_pos_y)
+        current_pos_y = y1 + (height * 3 // 4) 
 
-        x1, y1 = new_node_area[0]
-        x2, y2 = new_node_area[1]
+        # New to bottom
+        new_area_start = (x1, y1)
+        new_area_end = (x2, y_mid)
+        new_node_area = (new_area_start, new_area_end)
     
-    new_width, new_height = x2 - x1, y2 - y1
-    new_x = x1 + new_width // 2
-    new_y = y2 - new_height // 2
+    # Find new node positions
+    new_width = new_area_end[0] - new_area_start[0]
+    new_height = new_area_end[1] - new_area_start[1]
+    new_x = new_area_start[0] + new_width // 2
+    new_y = new_area_start[1] + new_height // 2
     new_position = (new_x, new_y)
+    current_node.position = (current_pos_x, current_pos_y)
     
     
     return new_position, new_node_area

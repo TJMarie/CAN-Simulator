@@ -20,3 +20,8 @@ class Node:
             self.neighbors.remove(neighbor_id)
         return self.neighbors
     
+    def add_content(self):
+        content = input(f"Enter new content for {self.id}: ")
+        self.content = content
+        return self.content
+    
