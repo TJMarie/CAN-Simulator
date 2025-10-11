@@ -28,19 +28,37 @@ def split_node(current_node):
     width, height = x2 - x1, y2 - y1
 
     if width >= height:
+        # Cut area in half vertically
         mid_x = x1 + width // 2
         new_node_area = [[mid_x, current_node.area[0][1]], [current_node.area[1][0], current_node.area[1][1]]]
-        x2 = mid_x
+        current_node.area = [[x1, y1], [mid_x, y2]]   
+
+        # Current to left, New to right
+        current_pos_x = x1 + (mid_x // 2)
+        current_pos_y = y1 + (height // 2) 
+        current_node.position = (current_pos_x, current_pos_y)
+
+        x1, y1 = new_node_area[0]
+        x2, y2 = new_node_area[1]
     else:
+        # Cut area in half horizontally
         mid_y = current_node.area[0][1] + height // 2
         new_node_area = [[current_node.area[0][0], mid_y], [current_node.area[1][0], current_node.area[1][1]]]
-        y2 = mid_y
+        current_node.area = [[x1, y1], [x2, mid_y]] 
+
+        # Current to top, New to bottom 
+        current_pos_x = x1 + width // 2
+        current_pos_y = y1 + (height // 4) 
+        current_node.position = (current_pos_x, current_pos_y)
+
+        x1, y1 = new_node_area[0]
+        x2, y2 = new_node_area[1]
     
-    current_node.area
+    new_width, new_height = x2 - x1, y2 - y1
+    new_x = x1 + new_width // 2
+    new_y = y2 - new_height // 2
+    new_position = (new_x, new_y)
     
-    x1, y1 = new_node_area[0]
-    x2, y2 = new_node_area[1]
-    new_position = (x2 - x1, y2 - y1)
     
     return new_position, new_node_area
 

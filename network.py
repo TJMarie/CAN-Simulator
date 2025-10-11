@@ -29,7 +29,7 @@ class Network:
             if calc.in_area(position, n):
                 node_to_split = n
             break
-        
+
         node_to_split = calc.find_nearest_node(position, self.nodes) 
 
         new_position, new_node_area = calc.split_node(node_to_split) 
@@ -43,15 +43,16 @@ class Network:
         return 
     
     def delete_node(self, node_id):
-        if node_id in self.nodes:
-            del self.nodes[node_id]
+        if node_id in self.node_locations.keys():
+            # del self.nodes[node_id]
             del self.node_locations[node_id]
-            if node_id in self.adjacency_list:
-                del self.adjacency_list[node_id]
-            for neighbors in self.adjacency_list.values():
-                if node_id in neighbors:
-                    neighbors.remove(node_id)
-            print(f"Node {node_id} deleted.")
+            # if node_id in self.adjacency_list:
+            #    del self.adjacency_list[node_id]
+            # for neighbors in self.adjacency_list.values():
+            #     if node_id in neighbors:
+            #         neighbors.remove(node_id)
+            print(f"Node {node_id} deleted.\n")
+            print(f"New list: {self.node_locations}")
         else:
             print(f"Node {node_id} not found.")
         return self.nodes

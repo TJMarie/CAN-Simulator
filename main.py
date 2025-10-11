@@ -17,7 +17,8 @@ def delete_a_node():
     print("END DELETION MODE\n=================\n")
 
 def list_nodes():
-    print(network.node_locations)
+    for node in network.nodes:
+        print(node.__repr__)
 
 def show_adjacent_nodes():
     print(network.adjacency_list)
@@ -68,5 +69,5 @@ if __name__ == "__main__":
         try:
             options[user_input]()
         except(KeyError):
-            print("Invalid command. Type 'help' for options.\n")
+            print("Invalid command. Type 'h' for options.\n")
         

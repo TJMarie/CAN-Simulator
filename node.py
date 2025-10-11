@@ -8,7 +8,7 @@ class Node:
         self.content = None
     
     def __repr__(self):
-        return f"Node(id={self.id}, position={self.position}, neighbors={self.neighbors})"
+        return f"Node(id={self.id}, position={self.position}, area={self.area})"
     
     def add_neighbor(self, neighbor_id):
         if neighbor_id not in self.neighbors:
