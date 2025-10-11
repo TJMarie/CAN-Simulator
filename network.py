@@ -34,7 +34,6 @@ class Network:
 
         new_position, new_node_area = calc.split_node(node_to_split) 
         new_node = Node(id=id, position=new_position if new_position else position)
-        new_node.area = new_node_area
         new_node.add_content()
 
         self.nodes.append(new_node)
