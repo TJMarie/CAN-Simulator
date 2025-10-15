@@ -11,7 +11,7 @@ def draw_network(nodes, dimensions):
     for node in nodes:
         # Draw node address
         x, y = node.position
-        plt.scatter(x, y, marker='o')
+        plt.scatter(x, y, marker='o') # type: ignore
         plt.text(x + 1, y + 1, node.id, fontsize=9)
 
         # Draw box around node

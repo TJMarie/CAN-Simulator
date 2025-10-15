@@ -8,12 +8,23 @@ Node neighbors: Dictionary of key: node ID, value: list of neighboring node IDs
 """
 
 def add_a_node():
+    print("\nAdded Node:\n")
     network.add_node()
 
 def delete_a_node():
+    if len(network.nodes) <= 1:
+        print("\nIssue: Cannot delete last node!")
+        return
+    
     print("\n=================\nDELETION MODE")
-    node_id = input("Type in the ID of the node you would like to delete: ")
-    network.delete_node(node_id)
+    node = choose_find_method()
+
+    if node:
+        network.delete_node(node)
+        print(f"\nNode 0x{node.id} deleted.")
+    else:
+        print("\nCould not find node.")
+
     print("END DELETION MODE\n=================\n")
 
 def list_nodes():
@@ -27,11 +38,80 @@ def draw_network():
     d.draw_network(network.nodes, network.dimensions)
 
 def find_a_node():
-    x = int(input("Enter x coordinate to find nearest neighbor: "))
-    y = int(input("Enter y coordinate to find nearest neighbor: "))
+    print("\n=================\nFIND MODE")
+    node = choose_find_method()
+
+    if not node: 
+        print("END FIND MODE\n=================\n")
+        return
+
+    print(f"\nWhat would you like to do with Node 0x{node.id}?\n")
+
+    user_input = input("'p' ==> print its content\
+                       \n'w' ==> write content\
+                       \n'del' ==> delete this node\
+                       \n'q' ==> cancel\n\n==> ").lower().strip()
+
+    if user_input == "p":
+        print(f"\n0x{node.id}'s Content:")
+        print(f"\n{node.content}\n")
+    elif user_input == "w":
+        content = input(f"\nWrite to node 0x{node.id}:\n\n==> ")
+        node.content = content
+    elif user_input == "del":
+        network.delete_node(node)
+    elif user_input == 'q':
+        print("\nCanceling find mode...\n")
+        pass
+    else:
+        print(f"\nI can't do that.\n")
+    
+    print("\nEND FIND MODE\n=================\n")
+    return
+
+def choose_find_method():
+    user_input = input("'coord' ==> find node by coordinates\
+                       \n'hex' ==> find node by hex ID\
+                       \n'q' ==> cancel\n\n==> ").lower().strip()
+    node = None
+    
+    # Choose search method
+    if user_input == 'coord':
+        node = find_by_coordinates()
+    elif user_input == 'hex':
+        node = find_by_hex()
+    elif user_input == 'q':
+        print("\nCanceling...\n\n")
+        return False
+    else:
+        print("\nI don't recognize that command.\n")
+
+    return node
+
+def find_by_hex():
+    node_id = input("Type in the hex ID of the node you would like to find: ").lower().strip() 
+
+    for n in network.nodes:
+        if n.id == node_id:
+            return n
+    
+    print(f"\nSorry, I couldn't find node 0x{node_id}")
+
+def find_by_coordinates():
+    """ Returns: nearest_node = Node object"""
+    print("Find nearest neighbor:\n")
+    x, y = 0, 0
+    try:
+        x = int(input("Enter x coordinate: ==> ").strip())
+        y = int(input("Enter y coordinate: ==> ").strip())
+    except(ValueError):
+        print("I don't know that number.")
+        return
     target_node = (x, y)
-    nearest_node = calc.find_nearest_node(target_node, network.node_locations.values())
-    print(f"Nearest node to {target_node} is at {nearest_node}\n")
+    nearest_node, sorted_nodes = calc.find_nearest_node(target_node, network.nodes)
+    print(f"The nearest node to {target_node} is:\
+        Node 0x{nearest_node.id} | Position: {nearest_node.position} | Area: {nearest_node.area}\n")
+    return nearest_node
 
 def help():
     print("Options:")
@@ -56,7 +136,6 @@ if __name__ == "__main__":
                "l": list_nodes,
                "f" : find_a_node,
                "draw" : draw_network,
-               "t" : show_adjacent_nodes,
                "h" : help,
                "q" : exit_simulator
     }
@@ -65,9 +144,9 @@ if __name__ == "__main__":
 
     user_input = ""
     while user_input.lower() != ("exit" or "q"):
-        user_input = input("\nType something ==> ")
+        user_input = input("\nType something ==> ").strip()
         try:
             options[user_input]()
         except(KeyError):
-            print("Invalid command. Type 'h' for options.\n")
+            print("\nInvalid command. Type 'h' for options.\n")
         
