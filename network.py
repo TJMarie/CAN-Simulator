@@ -5,7 +5,6 @@ class Network:
     def __init__(self, dimensions):
         self.dimensions = dimensions
         self.node_locations = {}
-        self.adjacency_list = {}
         self.nodes = []
 
     def initialize(self):
@@ -19,17 +18,16 @@ class Network:
 
     
     def add_node(self):
-        """Node to split: Node object"""
-
+        """ Node to split: Node object """
         id = calc.generate_hex_id()
         position = calc.generate_random_position(self.dimensions)
 
-        for n in self.nodes:
+        node_to_split, sorted_nodes = calc.find_nearest_node(position, self.nodes) 
+
+        for n in sorted_nodes:
             if calc.in_area(position, n):
                 node_to_split = n
-            break
-
-        node_to_split, sorted_nodes = calc.find_nearest_node(position, self.nodes) 
+                break
 
         new_position, new_node_area = calc.split_node(node_to_split) 
         new_node = Node(id=id, position=new_position if new_position else position)
@@ -42,7 +40,7 @@ class Network:
     
     def delete_node(self, node):
         """ Parameter: node = Node object
-            Returns: List(Node)"""
+            Returns: List(Node) """
         if len(self.nodes) <= 1:
             print("Issue: Cannot delete last node!\n")
             return
@@ -63,6 +61,13 @@ class Network:
             print(f"Node {node.id} not found.")
 
         return self.nodes
+    
+    def restructure_network(self):
+        """ Rearrange nodes to evenly distribute them in the CAN space 
+            Returns: None """
+        grid = calc.find_new_layout(num_nodes=len(self.nodes))
+        calc.find_new_positions(grid, self.dimensions, self.nodes)
+        pass
     
 
     

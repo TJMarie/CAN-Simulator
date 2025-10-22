@@ -8,8 +8,16 @@ Node neighbors: Dictionary of key: node ID, value: list of neighboring node IDs
 """
 
 def add_a_node():
-    print("\nAdded Node:\n")
-    network.add_node()
+    try:
+        num_nodes = int(input("\nHow many nodes would you like to add? ==> ").strip())
+    except(ValueError):
+        print("I don't know that number.")
+        return
+    
+    print("\n=================\nADDING NODES\n")
+    for _ in range(num_nodes):
+        network.add_node()
+    print("\nEND ADDING NODES\n=================\n")
 
 def delete_a_node():
     if len(network.nodes) <= 1:
@@ -31,43 +39,50 @@ def list_nodes():
     for node in network.nodes:
         print(f"Node 0x{node.id} | position: {node.position}")
 
-def show_adjacent_nodes():
-    print(network.adjacency_list)
-
 def draw_network():
     d.draw_network(network.nodes, network.dimensions)
 
 def find_a_node():
+    """Allows user to find a node by hex ID or coordinates, then print, write, or delete it."""
     print("\n=================\nFIND MODE")
     node = choose_find_method()
 
     if not node: 
         print("END FIND MODE\n=================\n")
         return
+    
+    find_options = "\n'p' ==> print its content\
+                    \n'w' ==> write content\
+                    \n'del' ==> delete this node\
+                    \n'h' ==> help\
+                    \n'q' ==> cancel find mode\n\n==> "
 
     print(f"\nWhat would you like to do with Node 0x{node.id}?\n")
 
-    user_input = input("'p' ==> print its content\
-                       \n'w' ==> write content\
-                       \n'del' ==> delete this node\
-                       \n'q' ==> cancel\n\n==> ").lower().strip()
+    user_input = input(find_options).lower().strip()
 
-    if user_input == "p":
-        print(f"\n0x{node.id}'s Content:")
-        print(f"\n{node.content}\n")
-    elif user_input == "w":
-        content = input(f"\nWrite to node 0x{node.id}:\n\n==> ")
-        node.content = content
-    elif user_input == "del":
-        network.delete_node(node)
-    elif user_input == 'q':
-        print("\nCanceling find mode...\n")
-        pass
-    else:
-        print(f"\nI can't do that.\n")
+    while user_input != "q":
+        if user_input == "p":
+            print(f"\nNode 0x{node.id}'s Content:")
+            print(f"\n{node.content}\n")
+        elif user_input == "w":
+            content = input(f"\nWrite to node 0x{node.id}:\n\n==> ")
+            node.content = content
+        elif user_input == "del":
+            network.delete_node(node)
+        elif user_input == "h":
+            print(f"\nFind options:\n{find_options}")
+        elif user_input == 'q':
+            print("\nCanceling find mode...\n")
+            return
+        else:
+            print(f"\nI can't do that. Enter 'h' for options.\n")
     
     print("\nEND FIND MODE\n=================\n")
     return
+
+def restructure():
+    network.restructure_network()
 
 def choose_find_method():
     user_input = input("'coord' ==> find node by coordinates\
@@ -116,7 +131,7 @@ def find_by_coordinates():
 def help():
     print("Options:")
     for option, function in options.items():
-        print(f"'{option}' ==> '{function.__name__}")
+        print(f"'{option}' ==> {function.__name__}")
 
 def exit_simulator():
     exit()
@@ -135,7 +150,8 @@ if __name__ == "__main__":
                "del" : delete_a_node,
                "l": list_nodes,
                "f" : find_a_node,
-               "draw" : draw_network,
+               "dr" : draw_network,
+               'r' : restructure,
                "h" : help,
                "q" : exit_simulator
     }

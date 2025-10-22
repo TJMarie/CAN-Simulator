@@ -1,4 +1,5 @@
 import random
+from math import floor, ceil
 from copy import deepcopy as dcopy
 
 def generate_hex_id():
@@ -65,7 +66,7 @@ def split_node(current_node):
 
 def merge_nodes(node_to_delete, node_list, i=0):
     """Parameters: node_to_delete=Node object, node_list=List(Node object)
-       Returns: new_area=List([x1, y1], [x2, y2])"""
+       Returns: new_area=List([x1, y1], [x2, y2]), new_position=Tuple(x, y)"""
     if not node_list: 
         print("Node list empty, cannot merge.")
         return
@@ -74,7 +75,7 @@ def merge_nodes(node_to_delete, node_list, i=0):
     node_to_merge = sorted_nodes[i + 1] if sorted_nodes[i] == node_to_delete else sorted_nodes[i]
     print(f"Node to delete: {node_to_delete.id}\nNode to merge: {node_to_merge.id}\n")
 
-    if node_to_delete.position[0] == node_to_merge.position[0]:
+    if node_to_delete.position[0] == node_to_merge.position[0] or len(node_list) == 2:
         new_area = vertical_merge(node_to_delete, node_to_merge)
         new_position = find_position(new_area)
         node_to_merge.position = new_position
@@ -130,15 +131,51 @@ def vertical_merge(node_to_delete, node_to_merge):
     node_to_merge.area = [bottom_node.area[0], top_node.area[1]]
     return node_to_merge.area
 
-def in_area(node_1, node_2):
-    """ Parameters: node_1=List(x, y), node_2=Node object
+def in_area(position, node):
+    """ Parameters: position=Tuple(x, y), node=Node object
         Returns: Boolean """
-    area_2 = node_2.area
-    xn, yn = node_1
-    x1, y1 = area_2[0]
-    x2, y2 = area_2[1]
+    area = node.area
+    xn, yn = position
+    x1, y1 = area[0]
+    x2, y2 = area[1]
 
-    if (x1 <= xn & xn <= x2 & y1 < yn & yn < y2):
+    if (x1 <= xn & xn <= x2 & y1 <= yn & yn <= y2):
         return True
     else:
         return False
+
+def find_new_layout(num_nodes):
+    """ Parameters: num_nodes=int
+        Returns: grid=List(List(None)) """
+    cols = floor(int(num_nodes ** 0.5))
+    rows = ceil(int(num_nodes ** 0.5))
+    grid = [[None for _ in range(cols)] for _ in range(rows)]
+    print(grid)
+    
+    return grid
+
+def find_new_positions(grid, dimensions, node_list):
+    """ Parameters: grid=List(List(None)), dimensions=Tuple(x, y), node_list=List(Node object)"""
+    grid_width = len(grid[0])
+    grid_height = len(grid)
+    cell_width = dimensions[0] // grid_width
+    cell_height = dimensions[1] // grid_height
+
+    node_index = 0
+    for row_index, row in enumerate(grid):
+        for col_index, cell in enumerate(row):
+            if node_index >= len(node_list):
+                break
+
+            x1 = col_index * cell_width
+            y1 = row_index * cell_height
+            x2 = x1 + cell_width if col_index < grid_width - 1 else dimensions[0]
+            y2 = y1 + cell_height if row_index < grid_height - 1 else dimensions[1]
+
+            x_pos = x1 + cell_width // 2
+            y_pos = y1 + cell_height // 2
+
+            node = node_list[node_index]
+            node.position = (x_pos, y_pos)
+            node.area = [[x1, y1], [x2, y2]]
+            node_index += 1
