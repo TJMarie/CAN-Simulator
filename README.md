@@ -1,6 +1,10 @@
 # CAN-Simulator
 This is my (Adrien Jones) solution to the operating/distributed systems homework 2.
-Requirements:
+
+## Walkthrough link:
+[Watch the recording of my walkthrough HERE](https://livememphis.sharepoint.com/:v:/s/Team-MeMyselfandI153/ERdGoVgEQhNMvm0ARMjUZZQBAADtEkJOR2gnRygx7qBW9Q?nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJTdHJlYW1XZWJBcHAiLCJyZWZlcnJhbFZpZXciOiJTaGFyZURpYWxvZy1MaW5rIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXcifX0%3D&e=whEIW2)
+
+## Requirements:
 
 1.     You must implement a model CAN as described in the text. That means is that your CONTENT addressable network must at least return the address of the CONTENT! This means that you will need to have content and associated addresses (keys) on a d-dimensional cartesian space. In practice, you might actually distribute the data but for our model, lets focus on the administrative side of this whereby the distributed system is "organized".
 2.     Your model must support the addition and deletion of nodes. 
