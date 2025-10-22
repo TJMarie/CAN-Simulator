@@ -54,27 +54,23 @@ def find_a_node():
     find_options = "\n'p' ==> print its content\
                     \n'w' ==> write content\
                     \n'del' ==> delete this node\
-                    \n'h' ==> help\
                     \n'q' ==> cancel find mode\n\n==> "
-
-    print(f"\nWhat would you like to do with Node 0x{node.id}?\n")
-
-    user_input = input(find_options).lower().strip()
+    user_input = ""
 
     while user_input != "q":
+        print(f"\nWhat would you like to do with Node 0x{node.id}?\n")
+        user_input = input(find_options).lower().strip()
+
         if user_input == "p":
             print(f"\nNode 0x{node.id}'s Content:")
             print(f"\n{node.content}\n")
         elif user_input == "w":
-            content = input(f"\nWrite to node 0x{node.id}:\n\n==> ")
-            node.content = content
+            node.content = input(f"\nWrite to node 0x{node.id}:\n\n==> ")
         elif user_input == "del":
             network.delete_node(node)
-        elif user_input == "h":
-            print(f"\nFind options:\n{find_options}")
         elif user_input == 'q':
             print("\nCanceling find mode...\n")
-            return
+            break
         else:
             print(f"\nI can't do that. Enter 'h' for options.\n")
     
@@ -88,7 +84,7 @@ def restructure():
 
 def choose_find_method():
     # Choose search method
-    find_options = {
+    choose_options = {
         'coord' : find_by_coordinates,
         'hex' : find_by_hex,
         'q' : lambda: print("\nCanceling...\n\n")
@@ -99,7 +95,7 @@ def choose_find_method():
     node = None
     
     try:
-        node = find_options[user_input]()
+        node = choose_options[user_input]()
     except(KeyError):
         print("\nI don't recognize that command.\n")
 

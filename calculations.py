@@ -190,8 +190,8 @@ def find_new_positions(grid, dimensions, node_list):
             x2 = x1 + cell_width if col_index < grid_width - 1 else dimensions[0]
             y2 = y1 + cell_height if row_index < grid_height - 1 else dimensions[1]
 
-            x_pos = x1 + cell_width / 2
-            y_pos = y1 + cell_height / 2
+            x_pos = x1 + cell_width // 2
+            y_pos = y1 + cell_height // 2
 
             node = node_list[node_index]
             node.position = (x_pos, y_pos)
