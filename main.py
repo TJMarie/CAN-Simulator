@@ -82,23 +82,25 @@ def find_a_node():
     return
 
 def restructure():
+    print("\n=================\nRESTRUCTURING NETWORK\n")
     network.restructure_network()
+    print("\nEND RESTRUCTURING NETWORK\n=================\n")
 
 def choose_find_method():
+    # Choose search method
+    find_options = {
+        'coord' : find_by_coordinates,
+        'hex' : find_by_hex,
+        'q' : lambda: print("\nCanceling...\n\n")
+    }
     user_input = input("'coord' ==> find node by coordinates\
                        \n'hex' ==> find node by hex ID\
                        \n'q' ==> cancel\n\n==> ").lower().strip()
     node = None
     
-    # Choose search method
-    if user_input == 'coord':
-        node = find_by_coordinates()
-    elif user_input == 'hex':
-        node = find_by_hex()
-    elif user_input == 'q':
-        print("\nCanceling...\n\n")
-        return False
-    else:
+    try:
+        node = find_options[user_input]()
+    except(KeyError):
         print("\nI don't recognize that command.\n")
 
     return node

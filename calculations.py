@@ -139,7 +139,7 @@ def in_area(position, node):
     x1, y1 = area[0]
     x2, y2 = area[1]
 
-    if (x1 <= xn & xn <= x2 & y1 <= yn & yn <= y2):
+    if (x1 <= xn) & (xn <= x2) & (y1 <= yn) & (yn <= y2):
         return True
     else:
         return False
@@ -147,24 +147,42 @@ def in_area(position, node):
 def find_new_layout(num_nodes):
     """ Parameters: num_nodes=int
         Returns: grid=List(List(None)) """
-    cols = floor(int(num_nodes ** 0.5))
-    rows = ceil(int(num_nodes ** 0.5))
-    grid = [[None for _ in range(cols)] for _ in range(rows)]
-    print(grid)
+    cols = floor(num_nodes ** 0.5)
+    rows = ceil(num_nodes ** 0.5)
+    extra = 0 if (cols * rows) >= num_nodes else 1
+    grid = [[None for _ in range(cols + extra)] for _ in range(rows)]
     
     return grid
 
 def find_new_positions(grid, dimensions, node_list):
     """ Parameters: grid=List(List(None)), dimensions=Tuple(x, y), node_list=List(Node object)"""
+    num_nodes = len(node_list)
     grid_width = len(grid[0])
     grid_height = len(grid)
-    cell_width = dimensions[0] // grid_width
-    cell_height = dimensions[1] // grid_height
+    num_cells = grid_width * grid_height
+    cell_width = dimensions[0] / grid_width
+    cell_height = dimensions[1] / grid_height
 
     node_index = 0
     for row_index, row in enumerate(grid):
-        for col_index, cell in enumerate(row):
-            if node_index >= len(node_list):
+        remaining_nodes = num_nodes - node_index
+
+        # If last row has less than half the num nodes as the rest,
+        # Adjust number of grid columns in the second to last row 
+        # to move 1/4 of nodes to last row
+        if (row_index == grid_height - 2) and remaining_nodes < (grid_width + (grid_width / 2)):
+            grid_width = remaining_nodes * 3 // 4
+
+        # Adjust number of grid columns in the last row 
+        # to number of remainder nodes
+        if row_index == grid_height - 1:
+            grid_width = remaining_nodes  
+
+        print(f"Row {row_index}, Remaining nodes: {remaining_nodes}")
+        cell_width = dimensions[0] / grid_width
+            
+        for col_index in range(grid_width):
+            if node_index >= num_nodes:
                 break
 
             x1 = col_index * cell_width
@@ -172,8 +190,8 @@ def find_new_positions(grid, dimensions, node_list):
             x2 = x1 + cell_width if col_index < grid_width - 1 else dimensions[0]
             y2 = y1 + cell_height if row_index < grid_height - 1 else dimensions[1]
 
-            x_pos = x1 + cell_width // 2
-            y_pos = y1 + cell_height // 2
+            x_pos = x1 + cell_width / 2
+            y_pos = y1 + cell_height / 2
 
             node = node_list[node_index]
             node.position = (x_pos, y_pos)
